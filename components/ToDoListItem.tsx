@@ -1,4 +1,12 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Icon,
+  Text,
+  Editable,
+  EditableInput,
+  EditablePreview,
+} from '@chakra-ui/react';
 import React from 'react';
 import { GoPrimitiveDot } from 'react-icons/go';
 
@@ -11,7 +19,7 @@ const ToDoListItem = () => (
       </Text>
     </Flex>
     <Flex alignItems="center" p="3">
-      <Text color="gray.500" fontWeight="light">
+      <Text color="gray.500" fontWeight="light" contentEditable>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo
         ornare pellentesque. Curabitur egestas, ante sed tempus consequat, nibh
         urna lobortis nisi, non aliquet erat sem ac nibh. Nunc scelerisque a

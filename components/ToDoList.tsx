@@ -15,7 +15,11 @@ const ToDoList = () => {
         aria-label="Add new to do"
         icon={<GoPlus />}
       ></IconButton>
-      <Stack direction="column">
+      <Stack spacing="24px" direction="column">
+        <ToDoListItem />
+        <ToDoListItem />
+        <ToDoListItem />
+        <ToDoListItem />
         <ToDoListItem />
       </Stack>
     </Box>
