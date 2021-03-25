@@ -1,17 +1,19 @@
-import {
-  Box,
-  Flex,
-  Icon,
-  Text,
-  Editable,
-  EditableInput,
-  EditablePreview,
-} from '@chakra-ui/react';
+import { Box, Flex, Icon, Text } from '@chakra-ui/react';
 import React from 'react';
 import { GoPrimitiveDot } from 'react-icons/go';
 
-const ToDoListItem = () => (
-  <Box bg="white" w="100%" rounded="lg" boxShadow="xs" px="2" py="3">
+const ToDoListItem = ({ draggableProvided }) => (
+  <Box
+    ref={draggableProvided.innerRef}
+    {...draggableProvided.draggableProps}
+    {...draggableProvided.dragHandleProps}
+    bg="white"
+    w="100%"
+    rounded="lg"
+    boxShadow="xs"
+    px="2"
+    py="3"
+  >
     <Flex alignItems="center">
       <Icon as={GoPrimitiveDot} mx="2" my="3" color="teal.500" />
       <Text fontSize="lg" fontWeight="semibold">
@@ -19,7 +21,7 @@ const ToDoListItem = () => (
       </Text>
     </Flex>
     <Flex alignItems="center" p="3">
-      <Text color="gray.500" fontWeight="light" contentEditable>
+      <Text color="gray.500" fontWeight="light">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo
         ornare pellentesque. Curabitur egestas, ante sed tempus consequat, nibh
         urna lobortis nisi, non aliquet erat sem ac nibh. Nunc scelerisque a
