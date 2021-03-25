@@ -3,7 +3,8 @@
     "baseUrl": ".",
     "paths": {
       "@/db": ["db"],
-      "@/models/*": ["models/*"]
+      "@/models/*": ["models/*"],
+      "@/components/*": ["components/*"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
