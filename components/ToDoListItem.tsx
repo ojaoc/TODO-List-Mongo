@@ -1,8 +1,26 @@
-import { Box, Flex, Icon, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Icon,
+  Text,
+  Input,
+  Textarea,
+  Button,
+  IconButton,
+} from '@chakra-ui/react';
 import React from 'react';
-import { GoPrimitiveDot } from 'react-icons/go';
+import { GoPrimitiveDot, GoX } from 'react-icons/go';
 
-const ToDoListItem = ({ draggableProvided }) => (
+const ToDoListItem = ({
+  draggableProvided,
+  isCreating,
+  handleCloseForm,
+  handleSubmitForm,
+  title,
+  description,
+  handleChangeTitle,
+  handleChangeDescription,
+}) => (
   <Box
     ref={draggableProvided.innerRef}
     {...draggableProvided.draggableProps}
@@ -14,25 +32,59 @@ const ToDoListItem = ({ draggableProvided }) => (
     px="2"
     py="3"
   >
-    <Flex alignItems="center">
-      <Icon as={GoPrimitiveDot} mx="2" my="3" color="teal.500" />
-      <Text fontSize="lg" fontWeight="semibold">
-        Title
-      </Text>
-    </Flex>
-    <Flex alignItems="center" p="3">
-      <Text color="gray.500" fontWeight="light">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo
-        ornare pellentesque. Curabitur egestas, ante sed tempus consequat, nibh
-        urna lobortis nisi, non aliquet erat sem ac nibh. Nunc scelerisque a
-        erat sed tempor. Aenean venenatis nec mi quis gravida. Praesent eu diam
-        lacinia, elementum urna non, sodales lacus. Praesent tincidunt tellus a
-        enim luctus semper. Curabitur eu risus vel velit tincidunt faucibus et
-        id tortor. Aliquam fringilla efficitur augue, sed iaculis felis porta
-        eu. Nunc tincidunt tellus tortor, nec egestas enim rhoncus convallis.
-        Nulla sit amet libero nec leo volutpat cursus.
-      </Text>
-    </Flex>
+    {isCreating ? (
+      <form onSubmit={handleSubmitForm}>
+        <Box px="3.5" py="2">
+          <Flex align="center" justify="space-between">
+            <Text color="gray.600" pl="1" fontWeight="semibold">
+              Add item
+            </Text>
+            <IconButton
+              onClick={handleCloseForm}
+              aria-label="Close To Do form"
+              icon={<GoX />}
+              variant="ghost"
+            />
+          </Flex>
+          <Flex py="4">
+            <Input
+              placeholder="Title"
+              focusBorderColor="teal.500"
+              value={title}
+              onChange={handleChangeTitle}
+            />
+          </Flex>
+          <Flex pb="4">
+            <Textarea
+              resize="none"
+              placeholder="Description"
+              focusBorderColor="teal.500"
+              value={description}
+              onChange={handleChangeDescription}
+            />
+          </Flex>
+          <Flex justify="flex-end" pt="1">
+            <Button size="sm" colorScheme="teal" type="submit">
+              Submit
+            </Button>
+          </Flex>
+        </Box>
+      </form>
+    ) : (
+      <>
+        <Flex alignItems="center" p="0">
+          <Icon as={GoPrimitiveDot} mx="2" my="3" color="teal.500" />
+          <Text fontSize="lg" fontWeight="semibold">
+            {title}
+          </Text>
+        </Flex>
+        <Flex p="3">
+          <Text color="gray.500" fontWeight="light">
+            {description}
+          </Text>
+        </Flex>
+      </>
+    )}
   </Box>
 );
 
