@@ -17,6 +17,20 @@ export default function Home() {
       (item) => item.isCreating === true
     ) === 'object';
 
+  const handleOnDragStart = () => {
+    if (isCreating) {
+      Object.keys(items).forEach((key) => {
+        if (
+          typeof items[key].find((item) => item.isCreating === true) ===
+          'object'
+        ) {
+          handleCloseForm(key)();
+          return;
+        }
+      });
+    }
+  };
+
   const handleOnDragEnd = ({ source, destination }) => {
     if (!destination) {
       return;
@@ -37,7 +51,7 @@ export default function Home() {
 
   const handleClickCreateItem = (listName) => () => {
     const newObj = { ...items };
-    newObj[listName].push({
+    newObj[listName].unshift({
       _id: new mongoose.Types.ObjectId().toHexString(),
       title: '',
       description: '',
@@ -73,7 +87,10 @@ export default function Home() {
 
   return (
     <Container maxW="container.lg">
-      <DragDropContext onDragEnd={handleOnDragEnd}>
+      <DragDropContext
+        onDragStart={handleOnDragStart}
+        onDragEnd={handleOnDragEnd}
+      >
         <Flex>
           {lists.map((item, index) => {
             return (
