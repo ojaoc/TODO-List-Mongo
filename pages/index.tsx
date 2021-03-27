@@ -31,27 +31,24 @@ export default function Home() {
     }
   };
 
-  const handleOnDragEnd = ({ source, destination }) => {
+  const handleOnDragEnd = ({ source, destination, draggableId }) => {
     if (!destination) {
       return;
     }
+
     const newObj = { ...items };
     const correspondingList = newObj[source.droppableId];
+
     newObj[source.droppableId] = correspondingList.filter(
-      (item) => correspondingList.indexOf(item) !== source.index
+      (item) => item._id !== draggableId
     ); // Filters out element in old position
 
     newObj[destination.droppableId].splice(
       destination.index,
       0,
-      correspondingList[source.index]
+      correspondingList.find((item) => item._id === draggableId)
     ); // Then places it in the new position
 
-    console.log(newObj[destination.droppableId]);
-
-    newObj[destination.droppableId] = newObj[destination.droppableId].filter(
-      (item) => item !== undefined
-    );
     setItems(newObj);
   };
 
