@@ -40,12 +40,18 @@ export default function Home() {
     newObj[source.droppableId] = correspondingList.filter(
       (item) => correspondingList.indexOf(item) !== source.index
     ); // Filters out element in old position
+
     newObj[destination.droppableId].splice(
       destination.index,
       0,
       correspondingList[source.index]
     ); // Then places it in the new position
 
+    console.log(newObj[destination.droppableId]);
+
+    newObj[destination.droppableId] = newObj[destination.droppableId].filter(
+      (item) => item !== undefined
+    );
     setItems(newObj);
   };
 
