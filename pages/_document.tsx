@@ -8,7 +8,7 @@ import Document, {
 import { extractCritical } from '@emotion/server';
 import { resetServerContext } from 'react-beautiful-dnd';
 
-export default class MyDocument extends Document {
+export default class MyDocument extends Document<any> {
   static async getInitialProps(ctx: DocumentContext) {
     const page = await ctx.renderPage();
     const initialProps = await Document.getInitialProps(ctx);
