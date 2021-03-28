@@ -2,7 +2,7 @@ import ToDoList from '@/components/ToDoList';
 import { Container } from '@chakra-ui/react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { Flex, Spacer } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import mongoose from 'mongoose';
 
 export default function Home() {
@@ -14,22 +14,8 @@ export default function Home() {
   });
   const isCreating =
     typeof [...items['To Do'], ...items['In Progress'], ...items['Done']].find(
-      (item) => item.isCreating === true
+      (item) => item.creating === true
     ) === 'object';
-
-  const handleOnDragStart = () => {
-    if (isCreating) {
-      Object.keys(items).forEach((key) => {
-        if (
-          typeof items[key].find((item) => item.isCreating === true) ===
-          'object'
-        ) {
-          handleCloseForm(key)();
-          return;
-        }
-      });
-    }
-  };
 
   const handleOnDragEnd = ({ source, destination, draggableId }) => {
     if (!destination) {
@@ -58,7 +44,7 @@ export default function Home() {
       _id: new mongoose.Types.ObjectId().toHexString(),
       title: '',
       description: '',
-      isCreating: true,
+      creating: true,
     });
     setItems(newObj);
   };
@@ -78,7 +64,7 @@ export default function Home() {
   const handleSubmitForm = (listName) => (e) => {
     e.preventDefault();
     const newObj = { ...items };
-    newObj[listName][0].isCreating = false;
+    newObj[listName][0].creating = false;
     setItems(newObj);
   };
 
@@ -90,16 +76,12 @@ export default function Home() {
 
   return (
     <Container maxW="container.lg">
-      <DragDropContext
-        onDragStart={handleOnDragStart}
-        onDragEnd={handleOnDragEnd}
-      >
+      <DragDropContext onDragEnd={handleOnDragEnd}>
         <Flex>
           {lists.map((item, index) => {
             return (
-              <>
+              <Fragment key={index}>
                 <ToDoList
-                  key={index + '-List'}
                   listName={item}
                   items={items[item]}
                   handleClickCreateItem={handleClickCreateItem}
@@ -109,10 +91,8 @@ export default function Home() {
                   handleCloseForm={handleCloseForm}
                   isCreating={isCreating}
                 />
-                {lists.length - 1 !== index && (
-                  <Spacer key={index && '-spacer'} />
-                )}
-              </>
+                {lists.length - 1 !== index && <Spacer />}
+              </Fragment>
             );
           })}
         </Flex>

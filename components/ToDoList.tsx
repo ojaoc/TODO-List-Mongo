@@ -49,8 +49,8 @@ const ToDoList = ({
                 </Text>
               </Box>
             )}
-            {items.map(({ _id, title, description, isCreating }, index) =>
-              isCreating ? (
+            {items.map(({ _id, title, description, creating }, index) =>
+              creating ? (
                 <ToDoListItem
                   key={index}
                   handleCloseForm={handleCloseForm(listName)}
@@ -63,7 +63,12 @@ const ToDoList = ({
                   isCreating={true}
                 />
               ) : (
-                <Draggable key={_id} draggableId={_id} index={index}>
+                <Draggable
+                  key={_id}
+                  draggableId={_id}
+                  index={index}
+                  isDragDisabled={isCreating}
+                >
                   {(draggableProvided) => (
                     <ToDoListItem
                       handleCloseForm={() => null}
