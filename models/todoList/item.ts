@@ -1,19 +1,28 @@
 import mongoose, { Schema } from 'mongoose';
 
-const itemSchema = new Schema(
-  {
-    title: {
-      type: String,
-      required: true,
+const itemSchema = (collectionName: string) =>
+  new Schema(
+    {
+      title: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+      },
+      creating: {
+        type: Boolean,
+      },
     },
-    description: {
-      type: String,
-    },
-    creating: {
-      type: Boolean,
-    },
-  },
-  { timestamps: true }
-);
+    { timestamps: true, collection: collectionName }
+  );
 
-export default mongoose.models.Item || mongoose.model('Item', itemSchema);
+export const ToDo =
+  mongoose.models['To Do'] || mongoose.model('To Do', itemSchema('To Do'));
+
+export const InProgress =
+  mongoose.models['In Progress'] ||
+  mongoose.model('In Progress', itemSchema('In Progress'));
+
+export const Done =
+  mongoose.models['Done'] || mongoose.model('Done', itemSchema('Done'));

@@ -6,7 +6,7 @@ import React, { useState, Fragment } from 'react';
 import mongoose from 'mongoose';
 import axios from 'axios';
 import connectToDatabase from '@/db';
-import Item from '@/models/todoList/item';
+import { ToDo, InProgress, Done } from '@/models/todoList/item';
 
 export default function Home() {
   const lists = ['To Do', 'In Progress', 'Done'];
@@ -106,20 +106,36 @@ export default function Home() {
   );
 }
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req }) {
   await connectToDatabase();
   if (req.method === 'POST') {
     let body = '';
+
     req.on('data', (chunk) => {
       body += chunk;
     });
     req.on('end', async () => {
+      let item;
+
       const obj = JSON.parse(body);
-      const item = new Item({
+      const newDoc = {
         _id: obj._id,
         title: obj.title,
-        description: obj.description ?? '',
-      });
+        description: obj.description,
+      };
+
+      switch (obj.collection) {
+        case 'To Do':
+          item = new ToDo(newDoc);
+          break;
+        case 'In Progress':
+          item = new InProgress(newDoc);
+          break;
+        case 'Done':
+          item = new Done(newDoc);
+          break;
+      }
+
       await item.save();
     });
   } else {
