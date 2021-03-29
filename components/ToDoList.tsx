@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, IconButton, Stack, Text } from '@chakra-ui/react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { GoPlus } from 'react-icons/go';

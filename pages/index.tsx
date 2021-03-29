@@ -4,6 +4,9 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { Flex, Spacer } from '@chakra-ui/react';
 import React, { useState, Fragment } from 'react';
 import mongoose from 'mongoose';
+import axios from 'axios';
+import connectToDatabase from '@/db';
+import Item from '@/models/todoList/item';
 
 export default function Home() {
   const lists = ['To Do', 'In Progress', 'Done'];
@@ -57,15 +60,17 @@ export default function Home() {
 
   const handleChangeDescription = (listName) => (e) => {
     const newObj = { ...items };
-    const firstItem = (newObj[listName][0].description = e.target.value);
+    newObj[listName][0].description = e.target.value;
     setItems(newObj);
   };
 
-  const handleSubmitForm = (listName) => (e) => {
+  const handleSubmitForm = (listName) => async (e) => {
     e.preventDefault();
     const newObj = { ...items };
     newObj[listName][0].creating = false;
     setItems(newObj);
+
+    await axios.post('/', { ...newObj[listName][0], collection: listName });
   };
 
   const handleCloseForm = (listName) => () => {
@@ -99,4 +104,28 @@ export default function Home() {
       </DragDropContext>
     </Container>
   );
+}
+
+export async function getServerSideProps({ req, res }) {
+  await connectToDatabase();
+  if (req.method === 'POST') {
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk;
+    });
+    req.on('end', async () => {
+      const obj = JSON.parse(body);
+      const item = new Item({
+        _id: obj._id,
+        title: obj.title,
+        description: obj.description ?? '',
+      });
+      await item.save();
+    });
+  } else {
+  }
+
+  return {
+    props: {},
+  };
 }

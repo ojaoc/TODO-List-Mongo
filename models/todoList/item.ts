@@ -8,7 +8,9 @@ const itemSchema = new Schema(
     },
     description: {
       type: String,
-      required: true,
+    },
+    creating: {
+      type: Boolean,
     },
   },
   { timestamps: true }
