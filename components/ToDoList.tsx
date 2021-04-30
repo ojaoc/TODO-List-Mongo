@@ -15,7 +15,7 @@ const ToDoList = ({
   isCreating,
 }) => {
   return (
-    <Box bg="gray.50" minW="280px" rounded="lg" px="5" py="6">
+    <Box bg="gray.50" minW="280px" rounded="lg" px="5" py="6" boxShadow="xl">
       <Text fontSize="lg" fontWeight="semibold">
         {listName}
       </Text>
