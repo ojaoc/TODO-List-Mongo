@@ -20,7 +20,7 @@ export default function Home() {
       (item) => item.creating === true
     ) === 'object';
 
-  const handleOnDragEnd = ({ source, destination, draggableId }) => {
+  const handleOnDragEnd = async ({ source, destination, draggableId }) => {
     if (!destination) {
       return;
     }
@@ -32,13 +32,19 @@ export default function Home() {
       (item) => item._id !== draggableId
     ); // Filters out element in old position
 
-    newObj[destination.droppableId].splice(
-      destination.index,
-      0,
-      correspondingList.find((item) => item._id === draggableId)
-    ); // Then places it in the new position
+    const newOrderItem = correspondingList.find(
+      (item) => item._id === draggableId
+    );
+    newOrderItem.order = destination.index;
+
+    newObj[destination.droppableId].splice(destination.index, 0, newOrderItem); // Then places it in the new position
 
     setItems(newObj);
+
+    await axios.put('/', {
+      ...newOrderItem,
+      collection: destination.droppableId,
+    });
   };
 
   const handleClickCreateItem = (listName) => () => {
@@ -47,6 +53,7 @@ export default function Home() {
       _id: new mongoose.Types.ObjectId().toHexString(),
       title: '',
       description: '',
+      order: 0,
       creating: true,
     });
     setItems(newObj);
@@ -122,6 +129,7 @@ export async function getServerSideProps({ req }) {
         _id: obj._id,
         title: obj.title,
         description: obj.description,
+        order: obj.order,
       };
 
       switch (obj.collection) {
@@ -138,7 +146,40 @@ export async function getServerSideProps({ req }) {
 
       await item.save();
     });
-  } else {
+  } else if (req.method === 'PUT') {
+    let body = '';
+
+    req.on('data', (chunk) => {
+      body += chunk;
+    });
+    req.on('end', async () => {
+      let item;
+
+      const obj = JSON.parse(body);
+
+      switch (obj.collection) {
+        case 'To Do':
+          item = ToDo.findOneAndUpdate(
+            { _id: `ObjectId(${obj._id})` },
+            { order: obj.order }
+          );
+          break;
+        case 'In Progress':
+          item = InProgress.findOneAndUpdate(
+            { _id: `ObjectId(${obj._id})` },
+            { order: obj.order }
+          );
+          break;
+        case 'Done':
+          item = Done.findOneAndUpdate(
+            { _id: `ObjectId(${obj._id})` },
+            { order: obj.order }
+          );
+          break;
+      }
+
+      await item.save();
+    });
   }
 
   return {

@@ -13,6 +13,9 @@ const itemSchema = (collectionName: string) =>
       creating: {
         type: Boolean,
       },
+      order: {
+        type: Number,
+      },
     },
     { timestamps: true, collection: collectionName }
   );
